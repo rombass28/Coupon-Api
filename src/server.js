@@ -20,13 +20,18 @@ client.connect((err) => {
         console.error(err);
         return;
     }
-    db = client.db('app');
+    db = client.db('store');
     console.log('Successful connection to DB');
 });
 
 
 app.put('/coupon', (req, res) => {
-    db.collection('coupons').insertOne(req.body, (err, coupon) => {
+    const coupon = {
+        code: req.body.code,
+        date: new Date(),
+        isRedeem: false
+    };
+    db.collection('coupons').insertOne(coupon, (err, coupon) => {
         if (err) {
             console.log(err);
             res.sendStatus(500);
